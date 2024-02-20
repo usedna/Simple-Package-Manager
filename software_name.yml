@@ -1,0 +1,22 @@
+- name: Install software
+  hosts: all
+  vars:
+    software_name: "{{ soft_name }}"
+    package_manager: "{{ pkg_mgr }}"
+  tasks:
+  - name: Update apt cache
+    apt:
+      update_cache: yes
+    when: package_manager == "apt"
+    register: apt_output
+  - name: Install software
+    apt:
+      name: "{{ software_name }}"
+      state: "{{ package_state }}"
+    when: package_manager == "apt"
+    register: apt_output
+  - name: Print output
+    debug:
+      msg: "stdout: {{ apt_output.stdout }}, stderr: {{ apt_output.stderr }}, exit code: {{ apt_output.rc }}"
+    when: package_manager == "apt_output"
+
